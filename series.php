@@ -2,42 +2,70 @@
 
 class Series implements Iterator
 {
-    private $programs = array();
+    private $program = array();
+    private $episodes = array();
     private $seasons = array();
-    private $position = 0;
+    private $positionSeason = 0;
+    private $positionEpisode = 0;
 
-    function __construct($data)
+    function __construct($program)
     {
-        $seasons = array_keys($data);
+        $seasons = array_keys($program);
         sort($seasons);
+        $episodes = array();
+        foreach ($seasons as $id => $seasonId) {
+            $season = $program[$seasonId];
+            ksort($season);
+            $episodes[$seasonId] = array_keys($season);
+        }
         $this->seasons = $seasons;
-        $this->programs = $data;
+        $this->episodes = $episodes;
+        $this->program = $program;
     }
 
 
     public function current()
     {
-        return $this->programs[$this->key()];
+        $s = $this->seasons[$this->positionSeason];
+        $e = $this->episodes[$s][$this->positionEpisode];
+        return $this->program[$s][$e];
     }
 
     public function next()
     {
-        $this->position++;
+        if (isset($this->seasons[$this->positionSeason])) {
+            $s = $this->seasons[$this->positionSeason];
+            if (isset($this->episodes[$s][$this->positionEpisode+1])) {
+                $this->positionEpisode++;
+            } else {
+                $this->positionSeason ++;
+                $this->positionEpisode = 0;
+            }
+        }
     }
 
     public function key()
     {
-        return $this->seasons[$this->position];
+        //TODO
+        exit;
+        return $this->seasons[$this->positionSeason];
     }
 
     public function valid()
     {
-        return isset($this->seasons[$this->position]);
+        $flag = false;
+        if (isset($this->seasons[$this->positionSeason])) {
+            $s = $this->seasons[$this->positionSeason];
+            if (isset($this->episodes[$s][$this->positionEpisode])) {
+                $flag = true;
+            }
+        }
+        return $flag;
     }
 
     public function rewind()
     {
-        $this->position = 0;
+        $this->positionSeason = 0;
+        $this->positionEpisode = 0;
     }
-
 }

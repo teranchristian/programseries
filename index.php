@@ -11,6 +11,11 @@ $json = [
     [
         'name' => 'tx s2 e2',
         'season' => 2,
+        'episode' => 12,
+    ],
+    [
+        'name' => 'tx s2 e2',
+        'season' => 2,
         'episode' => 2,
     ],
     [
@@ -53,6 +58,11 @@ $json = [
         'season' => 13,
         'episode' => 2,
     ],
+    [
+        'name' => 'tx s1 e1',
+        'season' => 7,
+        'episode' => 1,
+    ],
 ];
 
 $data = array();
@@ -61,11 +71,6 @@ foreach ($json as $v) {
 }
 header('Content-Type: application/json');
 $t = new Series($data);
-// var_dump($t);
 foreach ($t as $s) {
-    // echo current($s);
-
     var_dump($s);
 }
-// echo json_encode($data, true);
-exit;
